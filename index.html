@@ -10,20 +10,30 @@
   <body>
     <header>
       <span class="logo" aria-hidden="true">📖</span>
-      <h1 class="titre-principal"></h1>
+      <h1 class="titre-principal">
+        Les livres les plus empruntés à Paris en 2022
+      </h1>
     </header>
     <main>
       <section class="filtres">
         <p class="nb-livres"></p>
-        <div class="filtre">
-          <p>Trier par :</p>
-          <label for="type-de-document">Type de document</label>
-          <select name="type-de-document" id="type-de-document"></select>
-          <label for="auteur">Auteur</label>
-          <select name="auteur" id="auteur"></select>
+        <button class="btn-affichage-filtres">Afficher les filtres</button>
+        <div class="filtre-select cache">
+          <label for="type-de-document"
+            >Type de document<select
+              name="type-de-document"
+              id="type-de-document"
+            ></select
+          ></label>
+
+          <label for="auteur"
+            >Auteur
+            <select name="auteur" id="auteur"></select
+          ></label>
         </div>
       </section>
       <section class="cartes"></section>
+      <p class="nb-total-livres">Nombre total de livres : 100</p>
     </main>
   </body>
 </html>
