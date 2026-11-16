@@ -4,6 +4,16 @@
   padding: 0;
 }
 
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+}
 header {
   display: flex;
   align-items: center;
@@ -19,9 +29,80 @@ header {
 }
 
 .titre-principal {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: rgb(75, 15, 15);
 }
 .logo {
   font-size: 2rem;
+  margin: 1rem;
+  rotate: -45deg;
+}
+
+/* ========= zone de filtres =========== */
+
+.filtres {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgb(75, 15, 15);
+}
+
+.filtre-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btn-affichage-filtres {
+  all: unset;
+  background-color: rgba(252, 176, 69, 1);
+  width: fit-content;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  box-shadow: 3px 3px 4px rgba(253, 29, 29, 1);
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-affichage-filtres:hover {
+  outline: 3px solid red;
+  transform: scale(1.1);
+  font-weight: bold;
+}
+
+.btn-affichage-filtres:focus-visible {
+  outline: 3px solid red;
+  font-weight: bold;
+}
+/* 
+.cache {
+  display: none;
+} */
+
+select {
+  border-radius: 5px;
+  min-width: 100px;
+  margin-left: 10px;
+}
+
+select:focus-visible {
+  outline: 3px solid rgba(252, 176, 69, 1);
+  background-color: rgb(253, 205, 141);
+}
+
+.cartes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  overflow-y: scroll;
+}
+.carte {
+  background-color: rgba(252, 176, 69, 1);
+  border: 2px solid rgba(253, 29, 29, 1);
+  box-shadow: 2px 2px 4px rgb(75, 15, 15);
+  height: 200px;
+  width: 300px;
+  border-radius: 10px;
 }
