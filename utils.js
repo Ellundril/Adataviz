@@ -1,15 +1,37 @@
 function formaterListe(liste) {
-  const result = liste.results;
   const infosLivres = [];
-  for (let i = 0; i < result.length; i++) {
+  for (const livre of liste) {
     infosLivres.push({
-      titre: result.titre,
-      auteur: result.auteur,
-      typeDoc: result.type_de_document,
-      prets: result.prets,
+      titre: livre.titre,
+      auteur: livre.auteur,
+      typeDoc: livre.type_de_document,
+      prets: livre.prets,
     });
   }
   return infosLivres;
 }
 
-export { formaterListe };
+const cartes = document.querySelector(".cartes");
+
+function creerCarte(objetLivre) {
+  const { titre, auteur, typeDoc, prets } = objetLivre;
+  const carte = document.createElement("article");
+  carte.classList.add("carte");
+  cartes.appendChild(carte);
+  const titreLivre = document.createElement("h2");
+  titreLivre.classList.add("titre-livre");
+  titreLivre.textContent = titre;
+  const auteurLivre = document.createElement("p");
+  auteurLivre.classList.add("auteur");
+  auteurLivre.textContent = auteur;
+  const typeDeDoc = document.createElement("p");
+  typeDeDoc.textContent = typeDoc;
+  const nbDePrets = document.createElement("p");
+  nbDePrets.textContent = `Nombre de prêts : ${prets}`;
+  carte.appendChild(titreLivre);
+  carte.appendChild(auteurLivre);
+  carte.appendChild(typeDeDoc);
+  carte.appendChild(nbDePrets);
+}
+
+export { formaterListe, creerCarte, cartes };
