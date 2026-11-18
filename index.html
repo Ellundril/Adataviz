@@ -15,7 +15,6 @@
     </header>
     <main>
       <section class="filtres">
-        <p class="nb-livres"></p>
         <button class="btn-affichage-filtres">Afficher les filtres</button>
         <div class="filtre-select cache">
           <label for="type-de-document">
@@ -31,6 +30,18 @@
             Auteur
             <select name="auteur" id="auteur" data-cle="auteur"></select>
           </label>
+          <button
+            class="tri-nb-de-prets-decroissant"
+            aria-label="trier les livres par ordre décroissant de prêts"
+          >
+            ⬇️
+          </button>
+          <button
+            class="tri-nb-de-prets-croissant"
+            arai-label="trier les livres par ordre croissant de prêts"
+          >
+            ⬆️
+          </button>
         </div>
       </section>
       <section class="cartes"></section>

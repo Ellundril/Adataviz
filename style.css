@@ -96,6 +96,18 @@ select:focus-visible {
   background-color: rgb(253, 205, 141);
 }
 
+.tri-nb-de-prets {
+  all: unset;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.tri-nb-de-prets:focus-visible {
+  outline: 2px solid rgb(75, 15, 15);
+  border-radius: 5px;
+  background-color: rgba(252, 176, 69, 1);
+}
+
 /* 
 container query
 côté parent tu va définir un manière de nommer et dimensionner le conteneur
