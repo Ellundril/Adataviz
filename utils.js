@@ -12,7 +12,6 @@ function formaterListe(liste) {
 }
 
 const cartes = document.querySelector(".cartes");
-const selectTypeDoc = document.getElementById("type-de-document");
 const nbTotalLivres = document.querySelector(".nb-total-livres");
 
 function creerCarte(objetLivre) {
@@ -43,7 +42,7 @@ function afficherNbdeResultat(liste) {
 
 function creerFiltre(listeLivres, filtre) {
   let tabOptions = [];
-  // je recup le data attribute du filtre qui match avec la cle //data-filtre element.data
+  // je recup le data attribute du filtre qui match avec la cle
   listeLivres.forEach((livre) => {
     const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
     tabOptions.push(option);
@@ -57,4 +56,19 @@ function creerFiltre(listeLivres, filtre) {
   });
 }
 
-export { formaterListe, creerCarte, afficherNbdeResultat, creerFiltre };
+function filtrerLivres(listeLivres, filtre, filtreValue) {
+  const livresFiltres = listeLivres.filter(
+    (livre) => livre[filtre.dataset.cle] === filtreValue,
+  );
+  cartes.innerHTML = "";
+  livresFiltres.forEach((livre) => {
+    creerCarte(livre);
+  });
+}
+export {
+  formaterListe,
+  creerCarte,
+  afficherNbdeResultat,
+  creerFiltre,
+  filtrerLivres,
+};
