@@ -18,17 +18,19 @@
         <p class="nb-livres"></p>
         <button class="btn-affichage-filtres">Afficher les filtres</button>
         <div class="filtre-select cache">
-          <label for="type-de-document"
-            >Type de document<select
+          <label for="type-de-document">
+            Type de document
+            <select
               name="type-de-document"
               id="type-de-document"
-            ></select
-          ></label>
+              data-cle="typeDoc"
+            ></select>
+          </label>
 
-          <label for="auteur"
-            >Auteur
-            <select name="auteur" id="auteur"></select
-          ></label>
+          <label for="auteur">
+            Auteur
+            <select name="auteur" id="auteur" data-cle="auteur"></select>
+          </label>
         </div>
       </section>
       <section class="cartes"></section>

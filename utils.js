@@ -12,6 +12,8 @@ function formaterListe(liste) {
 }
 
 const cartes = document.querySelector(".cartes");
+const selectTypeDoc = document.getElementById("type-de-document");
+const nbTotalLivres = document.querySelector(".nb-total-livres");
 
 function creerCarte(objetLivre) {
   const { titre, auteur, typeDoc, prets } = objetLivre;
@@ -27,6 +29,7 @@ function creerCarte(objetLivre) {
   const typeDeDoc = document.createElement("p");
   typeDeDoc.textContent = typeDoc;
   const nbDePrets = document.createElement("p");
+  nbDePrets.classList.add("prets");
   nbDePrets.textContent = `Nombre de prêts : ${prets}`;
   carte.appendChild(titreLivre);
   carte.appendChild(auteurLivre);
@@ -34,4 +37,24 @@ function creerCarte(objetLivre) {
   carte.appendChild(nbDePrets);
 }
 
-export { formaterListe, creerCarte, cartes };
+function afficherNbdeResultat(liste) {
+  nbTotalLivres.textContent = `Nombre de livres affichés : ${liste.length}`;
+}
+
+function creerFiltre(listeLivres, filtre) {
+  let tabOptions = [];
+  // je recup le data attribute du filtre qui match avec la cle //data-filtre element.data
+  listeLivres.forEach((livre) => {
+    const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
+    tabOptions.push(option);
+  });
+  const setOption = new Set(tabOptions);
+  setOption.forEach((choix) => {
+    const option = document.createElement("option");
+    option.value = choix;
+    option.textContent = choix;
+    filtre.appendChild(option);
+  });
+}
+
+export { formaterListe, creerCarte, afficherNbdeResultat, creerFiltre };
