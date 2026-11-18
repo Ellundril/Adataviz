@@ -11,10 +11,7 @@ function formaterListe(liste) {
   return infosLivres;
 }
 
-const cartes = document.querySelector(".cartes");
-const nbTotalLivres = document.querySelector(".nb-total-livres");
-
-function creerCarte(objetLivre) {
+function creerCarte(objetLivre, cartes) {
   const { titre, auteur, typeDoc, prets } = objetLivre;
   const carte = document.createElement("article");
   carte.classList.add("carte");
@@ -36,8 +33,8 @@ function creerCarte(objetLivre) {
   carte.appendChild(nbDePrets);
 }
 
-function afficherNbdeResultat(liste) {
-  nbTotalLivres.textContent = `Nombre de livres affichés : ${liste.length}`;
+function afficherNbdeResultat(liste, element) {
+  element.textContent = `Nombre de livres affichés : ${liste.length}`;
 }
 
 function creerFiltre(listeLivres, filtre) {
@@ -56,21 +53,27 @@ function creerFiltre(listeLivres, filtre) {
   });
 }
 
-function filtrerLivres(listeLivres, filtre, filtreValue) {
+function filtrerLivres(
+  listeLivres,
+  filtre,
+  filtreValue,
+  cartes,
+  nbTotalLivres,
+) {
   cartes.innerHTML = "";
   if (filtreValue === "tous") {
     listeLivres.forEach((livre) => {
-      creerCarte(livre);
+      creerCarte(livre, cartes);
     });
-    afficherNbdeResultat(listeLivres);
+    afficherNbdeResultat(listeLivres, nbTotalLivres);
   } else {
     const livresFiltres = listeLivres.filter(
       (livre) => livre[filtre.dataset.cle] === filtreValue,
     );
     livresFiltres.forEach((livre) => {
-      creerCarte(livre);
+      creerCarte(livre, cartes);
     });
-    afficherNbdeResultat(livresFiltres);
+    afficherNbdeResultat(livresFiltres, nbTotalLivres);
   }
 }
 export {

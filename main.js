@@ -11,6 +11,8 @@ const selectTypeDoc = document.getElementById("type-de-document");
 const selectAuteur = document.getElementById("auteur");
 const boutonAfficherFiltre = document.querySelector(".btn-affichage-filtres");
 const zoneFiltres = document.querySelector(".filtre-select");
+const cartes = document.querySelector(".cartes");
+const nbTotalLivres = document.querySelector(".nb-total-livres");
 
 //recupération des données de l'API et affichage
 async function getLivres() {
@@ -24,18 +26,30 @@ async function getLivres() {
     const resultat = await reponse.json();
     const listeLivres = formaterListe(resultat.results);
     listeLivres.forEach((livre) => {
-      creerCarte(livre);
+      creerCarte(livre, cartes);
     });
-    afficherNbdeResultat(listeLivres);
+    afficherNbdeResultat(listeLivres, nbTotalLivres);
     creerFiltre(listeLivres, selectTypeDoc);
     creerFiltre(listeLivres, selectAuteur);
     selectTypeDoc.addEventListener("change", (event) => {
       const eventValue = event.target.value;
-      filtrerLivres(listeLivres, selectTypeDoc, eventValue);
+      filtrerLivres(
+        listeLivres,
+        selectTypeDoc,
+        eventValue,
+        cartes,
+        nbTotalLivres,
+      );
     });
     selectAuteur.addEventListener("change", (event) => {
       const eventValue = event.target.value;
-      filtrerLivres(listeLivres, selectAuteur, eventValue);
+      filtrerLivres(
+        listeLivres,
+        selectAuteur,
+        eventValue,
+        cartes,
+        nbTotalLivres,
+      );
     });
   } catch (erreur) {
     console.error(erreur.message);
