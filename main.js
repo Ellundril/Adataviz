@@ -44,8 +44,10 @@ async function getLivres() {
   }
 }
 
+//AFFICHAGE DES LIVRES
 getLivres();
 
+//AFFICHAGE DES FILTRES OU PAS EN MOBILE
 boutonAfficherFiltre.addEventListener("click", () => {
   zoneFiltres.classList.toggle("cache");
   if (boutonAfficherFiltre.textContent === "Afficher les filtres") {

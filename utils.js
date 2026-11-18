@@ -41,7 +41,7 @@ function afficherNbdeResultat(liste) {
 }
 
 function creerFiltre(listeLivres, filtre) {
-  let tabOptions = [];
+  let tabOptions = ["tous"];
   // je recup le data attribute du filtre qui match avec la cle
   listeLivres.forEach((livre) => {
     const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
@@ -57,13 +57,21 @@ function creerFiltre(listeLivres, filtre) {
 }
 
 function filtrerLivres(listeLivres, filtre, filtreValue) {
-  const livresFiltres = listeLivres.filter(
-    (livre) => livre[filtre.dataset.cle] === filtreValue,
-  );
   cartes.innerHTML = "";
-  livresFiltres.forEach((livre) => {
-    creerCarte(livre);
-  });
+  if (filtreValue === "tous") {
+    listeLivres.forEach((livre) => {
+      creerCarte(livre);
+    });
+    afficherNbdeResultat(listeLivres);
+  } else {
+    const livresFiltres = listeLivres.filter(
+      (livre) => livre[filtre.dataset.cle] === filtreValue,
+    );
+    livresFiltres.forEach((livre) => {
+      creerCarte(livre);
+    });
+    afficherNbdeResultat(livresFiltres);
+  }
 }
 export {
   formaterListe,
