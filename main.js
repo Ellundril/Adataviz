@@ -11,28 +11,36 @@ const btnTriDecroissant = document.querySelector(
   ".tri-nb-de-prets-decroissant",
 );
 const btnTricroissant = document.querySelector(".tri-nb-de-prets-croissant");
+const champRecherche = document.getElementById("champ-recherche");
 
 //affichage des options de tri en version mobile
 
 function creerCarte(objetLivre) {
   const { titre, auteur, typeDoc, prets } = objetLivre;
+
   const carte = document.createElement("article");
   carte.classList.add("carte");
+
   const titreLivre = document.createElement("h2");
   titreLivre.classList.add("titre-livre");
   titreLivre.textContent = titre;
+
   const auteurLivre = document.createElement("p");
   auteurLivre.classList.add("auteur");
   auteurLivre.textContent = auteur;
+
   const typeDeDoc = document.createElement("p");
   typeDeDoc.textContent = typeDoc;
+
   const nbDePrets = document.createElement("p");
   nbDePrets.classList.add("prets");
   nbDePrets.textContent = `Nombre de prêts : ${prets}`;
+
   carte.appendChild(titreLivre);
   carte.appendChild(auteurLivre);
   carte.appendChild(typeDeDoc);
   carte.appendChild(nbDePrets);
+
   return carte;
 }
 
@@ -65,8 +73,11 @@ function creerFiltre(listeLivres, filtre) {
   let tabOptions = ["tous"];
   // je recup le data attribute du filtre qui match avec la cle
   listeLivres.forEach((livre) => {
-    const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
-    tabOptions.push(option);
+    // je me sers du dataAttribute comme nom de cle
+    const option = livre[filtre.dataset.cle];
+    if (option) {
+      tabOptions.push(option);
+    }
   });
   const setOption = new Set(tabOptions);
   setOption.forEach((choix) => {
@@ -113,6 +124,14 @@ function activationListener(listeLivres) {
     afficherCartes(livresOrdonnes, cartes);
     afficherNbdeResultat(formatNbdeResultat(livresOrdonnes));
   });
+
+  champRecherche.addEventListener("change", (event) => {
+    const inputValue = event.target.value;
+    const resultats = recherche(inputValue, listeLivres);
+    afficherCartes(resultats, cartes);
+    console.log(resultats);
+    afficherNbdeResultat(formatNbdeResultat(resultats));
+  });
 }
 
 //recupération des données de l'API
@@ -145,7 +164,30 @@ async function main() {
     creerFiltre(listeLivres, selectAuteur);
 
     activationListener(listeLivres);
-  } catch {}
+  } catch (erreur) {
+    console.error(erreur.message);
+  }
 }
 
 main();
+
+function recherche(input, listeLivres) {
+  let livresTrouves = [];
+  listeLivres.forEach((livre) => {
+    const inputFormate = input.trim().toLowerCase();
+    if (livre.auteur !== null) {
+      const auteurFormate = livre.auteur.toLowerCase();
+      if (auteurFormate.includes(inputFormate)) {
+        livresTrouves.push(livre);
+      }
+    }
+    if (livre.titre !== null) {
+      const titreFormate = livre.titre.toLowerCase();
+      if (titreFormate.includes(inputFormate)) {
+        livresTrouves.push(livre);
+      }
+    }
+  });
+  const resultatsRecherche = new Set(livresTrouves);
+  return Array.from(resultatsRecherche);
+}
