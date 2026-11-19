@@ -1,4 +1,9 @@
-import { formaterListe, trierPrets } from "./utils.js";
+import {
+  formaterListe,
+  trierPrets,
+  creerCarte,
+  filtrerLivres,
+} from "./utils.js";
 
 //Elements du DOM
 const selectTypeDoc = document.getElementById("type-de-document");
@@ -12,32 +17,21 @@ const btnTriDecroissant = document.querySelector(
 );
 const btnTricroissant = document.querySelector(".tri-nb-de-prets-croissant");
 
-function creerCarte(objetLivre) {
-  const { titre, auteur, typeDoc, prets } = objetLivre;
-  const carte = document.createElement("article");
-  carte.classList.add("carte");
-  cartes.appendChild(carte);
-  const titreLivre = document.createElement("h2");
-  titreLivre.classList.add("titre-livre");
-  titreLivre.textContent = titre;
-  const auteurLivre = document.createElement("p");
-  auteurLivre.classList.add("auteur");
-  auteurLivre.textContent = auteur;
-  const typeDeDoc = document.createElement("p");
-  typeDeDoc.textContent = typeDoc;
-  const nbDePrets = document.createElement("p");
-  nbDePrets.classList.add("prets");
-  nbDePrets.textContent = `Nombre de prêts : ${prets}`;
-  carte.appendChild(titreLivre);
-  carte.appendChild(auteurLivre);
-  carte.appendChild(typeDeDoc);
-  carte.appendChild(nbDePrets);
-}
-
 function afficherNbdeResultat(liste) {
   nbTotalLivres.textContent = `Nombre de livres affichés : ${liste.length}`;
 }
-
+/* 
+   listeLivres.forEach((livre) => {
+     const carte = creerCarte(livre);
+     cartes.appendChild(carte);
+   }); */
+function afficherCartes(listeLivres, container) {
+  container.innerHTML = "";
+  listeLivres.forEach((livre) => {
+    const carte = creerCarte(livre);
+    container.appendChild(carte);
+  });
+}
 function creerFiltre(listeLivres, filtre) {
   let tabOptions = ["tous"];
   // je recup le data attribute du filtre qui match avec la cle
@@ -54,23 +48,6 @@ function creerFiltre(listeLivres, filtre) {
   });
 }
 
-function filtrerLivres(listeLivres, filtre, filtreValue) {
-  cartes.innerHTML = "";
-  if (filtreValue === "tous") {
-    listeLivres.forEach((livre) => {
-      creerCarte(livre);
-    });
-    afficherNbdeResultat(listeLivres);
-  } else {
-    const livresFiltres = listeLivres.filter(
-      (livre) => livre[filtre.dataset.cle] === filtreValue,
-    );
-    livresFiltres.forEach((livre) => {
-      creerCarte(livre);
-    });
-    afficherNbdeResultat(livresFiltres);
-  }
-}
 //recupération des données de l'API et affichage
 async function getLivres() {
   const url =
@@ -81,47 +58,61 @@ async function getLivres() {
       throw new Error(`Statut de réponse : ${reponse.status}`);
     }
     const resultat = await reponse.json();
-    const listeLivres = formaterListe(resultat.results);
-    //affichage
-    listeLivres.forEach((livre) => {
-      creerCarte(livre);
-    });
-    afficherNbdeResultat(listeLivres);
-    creerFiltre(listeLivres, selectTypeDoc);
-    creerFiltre(listeLivres, selectAuteur);
-    //listener des filtres
-    selectTypeDoc.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      filtrerLivres(listeLivres, selectTypeDoc, eventValue);
-    });
-    selectAuteur.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      filtrerLivres(listeLivres, selectAuteur, eventValue);
-    });
-    btnTricroissant.addEventListener("click", () => {
-      const livresOrdonnes = trierPrets(listeLivres, "croissant");
-      cartes.innerHTML = "";
-      livresOrdonnes.forEach((livre) => {
-        creerCarte(livre);
-      });
-    });
-    btnTriDecroissant.addEventListener("click", () => {
-      const livresOrdonnes = trierPrets(listeLivres, "décroissant");
-      cartes.innerHTML = "";
-      livresOrdonnes.forEach((livre) => {
-        creerCarte(livre);
-      });
-    });
+    return formaterListe(resultat.results);
   } catch (erreur) {
     console.error(erreur.message);
+    cartes.textContent =
+      " ! Une erreur s'est produite au chargement des fichiers ! ";
   } finally {
     console.log("chargement terminé");
   }
 }
 
 //AFFICHAGE DES LIVRES
-getLivres();
+async function main() {
+  try {
+    const listeLivres = await getLivres();
+    afficherCartes(listeLivres, cartes);
+    afficherNbdeResultat(listeLivres);
+    creerFiltre(listeLivres, selectTypeDoc);
+    creerFiltre(listeLivres, selectAuteur);
 
+    //listener des filtres
+    selectTypeDoc.addEventListener("change", (event) => {
+      const eventValue = event.target.value;
+      const livresFiltres = filtrerLivres(
+        listeLivres,
+        selectTypeDoc,
+        eventValue,
+      );
+      afficherCartes(livresFiltres, cartes);
+      afficherNbdeResultat(livresFiltres);
+    });
+    selectAuteur.addEventListener("change", (event) => {
+      const eventValue = event.target.value;
+      const livresFiltres = filtrerLivres(
+        listeLivres,
+        selectAuteur,
+        eventValue,
+      );
+      afficherCartes(livresFiltres, cartes);
+      afficherNbdeResultat(livresFiltres);
+    });
+
+    //listener des boutons tri
+    btnTricroissant.addEventListener("click", () => {
+      const livresOrdonnes = trierPrets(listeLivres, "croissant");
+      afficherCartes(livresOrdonnes, cartes);
+    });
+    btnTriDecroissant.addEventListener("click", () => {
+      const livresOrdonnes = trierPrets(listeLivres, "décroissant");
+      afficherCartes(livresOrdonnes, cartes);
+    });
+  } catch {}
+}
+
+main();
+/* 
 //AFFICHAGE DES FILTRES OU PAS EN MOBILE
 boutonAfficherFiltre.addEventListener("click", () => {
   zoneFiltres.classList.toggle("cache");
@@ -131,3 +122,4 @@ boutonAfficherFiltre.addEventListener("click", () => {
     boutonAfficherFiltre.textContent = "Afficher les filtres";
   }
 });
+ */
