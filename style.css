@@ -96,7 +96,8 @@ select:focus-visible {
   background-color: rgb(253, 205, 141);
 }
 
-.tri-nb-de-prets {
+.tri-nb-de-prets-croissant,
+.tri-nb-de-prets-decroissant {
   all: unset;
   cursor: pointer;
   font-size: 1.2rem;
