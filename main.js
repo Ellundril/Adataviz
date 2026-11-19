@@ -1,9 +1,4 @@
-import {
-  formaterListe,
-  trierPrets,
-  creerCarte,
-  filtrerLivres,
-} from "./utils.js";
+import { formaterListe, trierPrets, formatNbdeResultat } from "./utils.js";
 
 //Elements du DOM
 const selectTypeDoc = document.getElementById("type-de-document");
@@ -17,14 +12,30 @@ const btnTriDecroissant = document.querySelector(
 );
 const btnTricroissant = document.querySelector(".tri-nb-de-prets-croissant");
 
-function afficherNbdeResultat(liste) {
-  nbTotalLivres.textContent = `Nombre de livres affichés : ${liste.length}`;
+//affichage des options de tri en version mobile
+
+function creerCarte(objetLivre) {
+  const { titre, auteur, typeDoc, prets } = objetLivre;
+  const carte = document.createElement("article");
+  carte.classList.add("carte");
+  const titreLivre = document.createElement("h2");
+  titreLivre.classList.add("titre-livre");
+  titreLivre.textContent = titre;
+  const auteurLivre = document.createElement("p");
+  auteurLivre.classList.add("auteur");
+  auteurLivre.textContent = auteur;
+  const typeDeDoc = document.createElement("p");
+  typeDeDoc.textContent = typeDoc;
+  const nbDePrets = document.createElement("p");
+  nbDePrets.classList.add("prets");
+  nbDePrets.textContent = `Nombre de prêts : ${prets}`;
+  carte.appendChild(titreLivre);
+  carte.appendChild(auteurLivre);
+  carte.appendChild(typeDeDoc);
+  carte.appendChild(nbDePrets);
+  return carte;
 }
-/* 
-   listeLivres.forEach((livre) => {
-     const carte = creerCarte(livre);
-     cartes.appendChild(carte);
-   }); */
+
 function afficherCartes(listeLivres, container) {
   container.innerHTML = "";
   listeLivres.forEach((livre) => {
@@ -32,6 +43,24 @@ function afficherCartes(listeLivres, container) {
     container.appendChild(carte);
   });
 }
+
+function afficherNbdeResultat(phrase) {
+  nbTotalLivres.textContent = phrase;
+}
+
+function filtrerLivres(listeLivres, filtre, filtreValue) {
+  let newListeLivres;
+  if (filtreValue === "tous") {
+    newListeLivres = listeLivres;
+  } else {
+    const livresFiltres = listeLivres.filter(
+      (livre) => livre[filtre.dataset.cle] === filtreValue,
+    );
+    newListeLivres = livresFiltres;
+  }
+  return newListeLivres;
+}
+
 function creerFiltre(listeLivres, filtre) {
   let tabOptions = ["tous"];
   // je recup le data attribute du filtre qui match avec la cle
@@ -48,7 +77,45 @@ function creerFiltre(listeLivres, filtre) {
   });
 }
 
-//recupération des données de l'API et affichage
+function activationListener(listeLivres) {
+  //Bouton afficher/cacher les filtres
+  boutonAfficherFiltre.addEventListener("click", () => {
+    zoneFiltres.classList.toggle("cache");
+    if (boutonAfficherFiltre.textContent === "Afficher les filtres") {
+      boutonAfficherFiltre.textContent = "Cacher les filtres";
+    } else {
+      boutonAfficherFiltre.textContent = "Afficher les filtres";
+    }
+  });
+
+  //listener des filtres
+  selectTypeDoc.addEventListener("change", (event) => {
+    const eventValue = event.target.value;
+    const livresFiltres = filtrerLivres(listeLivres, selectTypeDoc, eventValue);
+    afficherCartes(livresFiltres, cartes);
+    afficherNbdeResultat(formatNbdeResultat(livresFiltres));
+  });
+  selectAuteur.addEventListener("change", (event) => {
+    const eventValue = event.target.value;
+    const livresFiltres = filtrerLivres(listeLivres, selectAuteur, eventValue);
+    afficherCartes(livresFiltres, cartes);
+    afficherNbdeResultat(formatNbdeResultat(livresFiltres));
+  });
+
+  //listener des boutons tri
+  btnTricroissant.addEventListener("click", () => {
+    const livresOrdonnes = trierPrets(listeLivres, "croissant");
+    afficherCartes(livresOrdonnes, cartes);
+    afficherNbdeResultat(formatNbdeResultat(livresOrdonnes));
+  });
+  btnTriDecroissant.addEventListener("click", () => {
+    const livresOrdonnes = trierPrets(listeLivres, "décroissant");
+    afficherCartes(livresOrdonnes, cartes);
+    afficherNbdeResultat(formatNbdeResultat(livresOrdonnes));
+  });
+}
+
+//recupération des données de l'API
 async function getLivres() {
   const url =
     "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/les-titres-les-plus-pretes/records?limit=100";
@@ -73,53 +140,12 @@ async function main() {
   try {
     const listeLivres = await getLivres();
     afficherCartes(listeLivres, cartes);
-    afficherNbdeResultat(listeLivres);
+    afficherNbdeResultat(formatNbdeResultat(listeLivres));
     creerFiltre(listeLivres, selectTypeDoc);
     creerFiltre(listeLivres, selectAuteur);
 
-    //listener des filtres
-    selectTypeDoc.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      const livresFiltres = filtrerLivres(
-        listeLivres,
-        selectTypeDoc,
-        eventValue,
-      );
-      afficherCartes(livresFiltres, cartes);
-      afficherNbdeResultat(livresFiltres);
-    });
-    selectAuteur.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      const livresFiltres = filtrerLivres(
-        listeLivres,
-        selectAuteur,
-        eventValue,
-      );
-      afficherCartes(livresFiltres, cartes);
-      afficherNbdeResultat(livresFiltres);
-    });
-
-    //listener des boutons tri
-    btnTricroissant.addEventListener("click", () => {
-      const livresOrdonnes = trierPrets(listeLivres, "croissant");
-      afficherCartes(livresOrdonnes, cartes);
-    });
-    btnTriDecroissant.addEventListener("click", () => {
-      const livresOrdonnes = trierPrets(listeLivres, "décroissant");
-      afficherCartes(livresOrdonnes, cartes);
-    });
+    activationListener(listeLivres);
   } catch {}
 }
 
 main();
-/* 
-//AFFICHAGE DES FILTRES OU PAS EN MOBILE
-boutonAfficherFiltre.addEventListener("click", () => {
-  zoneFiltres.classList.toggle("cache");
-  if (boutonAfficherFiltre.textContent === "Afficher les filtres") {
-    boutonAfficherFiltre.textContent = "Cacher les filtres";
-  } else {
-    boutonAfficherFiltre.textContent = "Afficher les filtres";
-  }
-});
- */
