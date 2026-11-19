@@ -129,7 +129,8 @@ function activationListener(listeLivres) {
     const inputValue = event.target.value;
     const resultats = recherche(inputValue, listeLivres);
     afficherCartes(resultats, cartes);
-    console.log(inputValue);
+    console.log(resultats);
+    afficherNbdeResultat(formatNbdeResultat(resultats));
   });
 }
 
@@ -187,6 +188,6 @@ function recherche(input, listeLivres) {
       }
     }
   });
-  console.log(livresTrouves);
-  return livresTrouves;
+  const resultatsRecherche = new Set(livresTrouves);
+  return Array.from(resultatsRecherche);
 }
