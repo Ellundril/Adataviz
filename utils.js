@@ -11,11 +11,10 @@ function formaterListe(liste) {
   return infosLivres;
 }
 
-function creerCarte(objetLivre, cartes) {
+function creerCarte(objetLivre) {
   const { titre, auteur, typeDoc, prets } = objetLivre;
   const carte = document.createElement("article");
   carte.classList.add("carte");
-  cartes.appendChild(carte);
   const titreLivre = document.createElement("h2");
   titreLivre.classList.add("titre-livre");
   titreLivre.textContent = titre;
@@ -31,55 +30,56 @@ function creerCarte(objetLivre, cartes) {
   carte.appendChild(auteurLivre);
   carte.appendChild(typeDeDoc);
   carte.appendChild(nbDePrets);
+  return carte;
 }
 
-function afficherNbdeResultat(liste, element) {
-  element.textContent = `Nombre de livres affichés : ${liste.length}`;
+function trierPrets(liste, ordre) {
+  const listeTemp = liste.toSorted(
+    (livre1, livre2) => livre1.prets - livre2.prets,
+  );
+  switch (ordre) {
+    case "croissant":
+      return listeTemp;
+      break;
+    case "décroissant":
+      return listeTemp.reverse();
+      break;
+    default:
+      return;
+  }
 }
 
-function creerFiltre(listeLivres, filtre) {
-  let tabOptions = ["tous"];
-  // je recup le data attribute du filtre qui match avec la cle
-  listeLivres.forEach((livre) => {
-    const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
-    tabOptions.push(option);
+function filtrerLivresAuteur(livres, filtreValue) {
+  let listeFiltree = livres.filter((livre) => {
+    livre.auteur === filtreValue;
   });
-  const setOption = new Set(tabOptions);
-  setOption.forEach((choix) => {
-    const option = document.createElement("option");
-    option.value = choix;
-    option.textContent = choix;
-    filtre.appendChild(option);
+  return listeFiltree;
+}
+function filtrerLivresTypeDoc(livres, filtreValue) {
+  let listeFiltree = livres.filter((livre) => {
+    livre.typeDoc === filtreValue;
   });
+  return listeFiltree;
 }
 
-function filtrerLivres(
-  listeLivres,
-  filtre,
-  filtreValue,
-  cartes,
-  nbTotalLivres,
-) {
-  cartes.innerHTML = "";
+function filtrerLivres(listeLivres, filtre, filtreValue) {
+  let newListeLivres;
   if (filtreValue === "tous") {
-    listeLivres.forEach((livre) => {
-      creerCarte(livre, cartes);
-    });
-    afficherNbdeResultat(listeLivres, nbTotalLivres);
+    newListeLivres = listeLivres;
   } else {
     const livresFiltres = listeLivres.filter(
       (livre) => livre[filtre.dataset.cle] === filtreValue,
     );
-    livresFiltres.forEach((livre) => {
-      creerCarte(livre, cartes);
-    });
-    afficherNbdeResultat(livresFiltres, nbTotalLivres);
+    newListeLivres = livresFiltres;
   }
+  return newListeLivres;
 }
+
 export {
   formaterListe,
   creerCarte,
-  afficherNbdeResultat,
-  creerFiltre,
+  trierPrets,
+  filtrerLivresAuteur,
+  filtrerLivresTypeDoc,
   filtrerLivres,
 };

@@ -1,8 +1,7 @@
 import {
   formaterListe,
+  trierPrets,
   creerCarte,
-  afficherNbdeResultat,
-  creerFiltre,
   filtrerLivres,
 } from "./utils.js";
 
@@ -13,6 +12,41 @@ const boutonAfficherFiltre = document.querySelector(".btn-affichage-filtres");
 const zoneFiltres = document.querySelector(".filtre-select");
 const cartes = document.querySelector(".cartes");
 const nbTotalLivres = document.querySelector(".nb-total-livres");
+const btnTriDecroissant = document.querySelector(
+  ".tri-nb-de-prets-decroissant",
+);
+const btnTricroissant = document.querySelector(".tri-nb-de-prets-croissant");
+
+function afficherNbdeResultat(liste) {
+  nbTotalLivres.textContent = `Nombre de livres affichés : ${liste.length}`;
+}
+/* 
+   listeLivres.forEach((livre) => {
+     const carte = creerCarte(livre);
+     cartes.appendChild(carte);
+   }); */
+function afficherCartes(listeLivres, container) {
+  container.innerHTML = "";
+  listeLivres.forEach((livre) => {
+    const carte = creerCarte(livre);
+    container.appendChild(carte);
+  });
+}
+function creerFiltre(listeLivres, filtre) {
+  let tabOptions = ["tous"];
+  // je recup le data attribute du filtre qui match avec la cle
+  listeLivres.forEach((livre) => {
+    const option = livre[filtre.dataset.cle]; // je me sers du dataAttribute comme nom de cle
+    tabOptions.push(option);
+  });
+  const setOption = new Set(tabOptions);
+  setOption.forEach((choix) => {
+    const option = document.createElement("option");
+    option.value = choix;
+    option.textContent = choix;
+    filtre.appendChild(option);
+  });
+}
 
 //recupération des données de l'API et affichage
 async function getLivres() {
@@ -24,43 +58,61 @@ async function getLivres() {
       throw new Error(`Statut de réponse : ${reponse.status}`);
     }
     const resultat = await reponse.json();
-    const listeLivres = formaterListe(resultat.results);
-    listeLivres.forEach((livre) => {
-      creerCarte(livre, cartes);
-    });
-    afficherNbdeResultat(listeLivres, nbTotalLivres);
-    creerFiltre(listeLivres, selectTypeDoc);
-    creerFiltre(listeLivres, selectAuteur);
-    selectTypeDoc.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      filtrerLivres(
-        listeLivres,
-        selectTypeDoc,
-        eventValue,
-        cartes,
-        nbTotalLivres,
-      );
-    });
-    selectAuteur.addEventListener("change", (event) => {
-      const eventValue = event.target.value;
-      filtrerLivres(
-        listeLivres,
-        selectAuteur,
-        eventValue,
-        cartes,
-        nbTotalLivres,
-      );
-    });
+    return formaterListe(resultat.results);
   } catch (erreur) {
     console.error(erreur.message);
+    cartes.textContent =
+      " ! Une erreur s'est produite au chargement des fichiers ! ";
   } finally {
     console.log("chargement terminé");
   }
 }
 
 //AFFICHAGE DES LIVRES
-getLivres();
+async function main() {
+  try {
+    const listeLivres = await getLivres();
+    afficherCartes(listeLivres, cartes);
+    afficherNbdeResultat(listeLivres);
+    creerFiltre(listeLivres, selectTypeDoc);
+    creerFiltre(listeLivres, selectAuteur);
 
+    //listener des filtres
+    selectTypeDoc.addEventListener("change", (event) => {
+      const eventValue = event.target.value;
+      const livresFiltres = filtrerLivres(
+        listeLivres,
+        selectTypeDoc,
+        eventValue,
+      );
+      afficherCartes(livresFiltres, cartes);
+      afficherNbdeResultat(livresFiltres);
+    });
+    selectAuteur.addEventListener("change", (event) => {
+      const eventValue = event.target.value;
+      const livresFiltres = filtrerLivres(
+        listeLivres,
+        selectAuteur,
+        eventValue,
+      );
+      afficherCartes(livresFiltres, cartes);
+      afficherNbdeResultat(livresFiltres);
+    });
+
+    //listener des boutons tri
+    btnTricroissant.addEventListener("click", () => {
+      const livresOrdonnes = trierPrets(listeLivres, "croissant");
+      afficherCartes(livresOrdonnes, cartes);
+    });
+    btnTriDecroissant.addEventListener("click", () => {
+      const livresOrdonnes = trierPrets(listeLivres, "décroissant");
+      afficherCartes(livresOrdonnes, cartes);
+    });
+  } catch {}
+}
+
+main();
+/* 
 //AFFICHAGE DES FILTRES OU PAS EN MOBILE
 boutonAfficherFiltre.addEventListener("click", () => {
   zoneFiltres.classList.toggle("cache");
@@ -70,3 +122,4 @@ boutonAfficherFiltre.addEventListener("click", () => {
     boutonAfficherFiltre.textContent = "Afficher les filtres";
   }
 });
+ */
