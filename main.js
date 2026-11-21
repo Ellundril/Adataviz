@@ -25,6 +25,22 @@ function creerCarte(objetLivre) {
 
   const carte = document.createElement("article");
   carte.classList.add("carte");
+  switch (typeDoc) {
+    case "Bande dessinée jeunesse":
+      carte.classList.add("bd-jeunesse");
+      break;
+    case "Bande dessinée adulte":
+      carte.classList.add("bd-adulte");
+      break;
+    case "Livre jeunesse":
+      carte.classList.add("livre-jeunesse");
+      break;
+    case "Livre adulte":
+      carte.classList.add("livre-adulte");
+      break;
+    default:
+      break;
+  }
 
   const titreLivre = document.createElement("h2");
   titreLivre.classList.add("titre-livre");
