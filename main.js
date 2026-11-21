@@ -1,4 +1,9 @@
-import { formaterListe, trierPrets, formatNbdeResultat } from "./utils.js";
+import {
+  formaterListe,
+  trierPrets,
+  formatNbdeResultat,
+  recherche,
+} from "./utils.js";
 
 //Elements du DOM
 const selectTypeDoc = document.getElementById("type-de-document");
@@ -170,24 +175,3 @@ async function main() {
 }
 
 main();
-
-function recherche(input, listeLivres) {
-  let livresTrouves = [];
-  listeLivres.forEach((livre) => {
-    const inputFormate = input.trim().toLowerCase();
-    if (livre.auteur !== null) {
-      const auteurFormate = livre.auteur.toLowerCase();
-      if (auteurFormate.includes(inputFormate)) {
-        livresTrouves.push(livre);
-      }
-    }
-    if (livre.titre !== null) {
-      const titreFormate = livre.titre.toLowerCase();
-      if (titreFormate.includes(inputFormate)) {
-        livresTrouves.push(livre);
-      }
-    }
-  });
-  const resultatsRecherche = new Set(livresTrouves);
-  return Array.from(resultatsRecherche);
-}

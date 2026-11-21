@@ -29,4 +29,24 @@ function formatNbdeResultat(liste) {
   return `Nombre de livres affichés : ${liste.length}`;
 }
 
-export { formaterListe, trierPrets, formatNbdeResultat };
+function recherche(input, listeLivres) {
+  let livresTrouves = [];
+  listeLivres.forEach((livre) => {
+    const inputFormate = input.trim().toLowerCase();
+    if (livre.auteur !== null) {
+      const auteurFormate = livre.auteur.toLowerCase();
+      if (auteurFormate.includes(inputFormate)) {
+        livresTrouves.push(livre);
+      }
+    }
+    if (livre.titre !== null) {
+      const titreFormate = livre.titre.toLowerCase();
+      if (titreFormate.includes(inputFormate)) {
+        livresTrouves.push(livre);
+      }
+    }
+  });
+  const resultatsRecherche = new Set(livresTrouves);
+  return Array.from(resultatsRecherche);
+}
+export { formaterListe, trierPrets, formatNbdeResultat, recherche };

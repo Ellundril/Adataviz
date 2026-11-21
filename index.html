@@ -18,7 +18,7 @@
         <button class="btn-affichage-filtres">Afficher les filtres</button>
         <div class="filtre-select cache">
           <label for="type-de-document">
-            Type de document
+            Type d'ouvrage
             <select
               name="type-de-document"
               id="type-de-document"
@@ -30,18 +30,6 @@
             Auteur
             <select name="auteur" id="auteur" data-cle="auteur"></select>
           </label>
-          <button
-            class="tri-nb-de-prets-decroissant"
-            aria-label="trier les livres par ordre décroissant de prêts"
-          >
-            ⬇️
-          </button>
-          <button
-            class="tri-nb-de-prets-croissant"
-            arai-label="trier les livres par ordre croissant de prêts"
-          >
-            ⬆️
-          </button>
           <label class="recherche" for="champ-recherche"
             >Rechercher :
             <input
@@ -51,6 +39,20 @@
               minlength="3"
               spellcheck="false"
           /></label>
+          <div class="btn-ordre">
+            <button
+              class="tri-nb-de-prets-decroissant"
+              aria-label="trier les livres par ordre décroissant de prêts"
+            >
+              ⬇️
+            </button>
+            <button
+              class="tri-nb-de-prets-croissant"
+              arai-label="trier les livres par ordre croissant de prêts"
+            >
+              ⬆️
+            </button>
+          </div>
         </div>
       </section>
       <section class="cartes"></section>

@@ -60,7 +60,8 @@ header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  align-items: flex-start;
 }
 
 .btn-affichage-filtres {
@@ -89,6 +90,7 @@ select {
   border-radius: 5px;
   min-width: 100px;
   margin-left: 10px;
+  font-size: 1rem;
 }
 
 select:focus-visible {
@@ -168,7 +170,9 @@ côté enfant tu peux faire des breakpoint relatif à un parent
   .btn-affichage-filtres {
     display: none;
   }
-
+  .btn-ordre {
+    display: flex;
+  }
   .filtre-select {
     display: flex;
     flex-direction: row;
