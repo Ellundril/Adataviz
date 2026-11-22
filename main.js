@@ -150,7 +150,6 @@ function activationListener(listeLivres) {
     const inputValue = event.target.value;
     const resultats = recherche(inputValue, listeLivres);
     afficherCartes(resultats, cartes);
-    console.log(resultats);
     afficherNbdeResultat(formatNbdeResultat(resultats));
   });
 }

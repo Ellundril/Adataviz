@@ -47,6 +47,7 @@ function recherche(input, listeLivres) {
     }
   });
   const resultatsRecherche = new Set(livresTrouves);
+  console.log(resultatsRecherche);
   return Array.from(resultatsRecherche);
 }
 export { formaterListe, trierPrets, formatNbdeResultat, recherche };
