@@ -18,8 +18,6 @@ const btnTriDecroissant = document.querySelector(
 const btnTricroissant = document.querySelector(".tri-nb-de-prets-croissant");
 const champRecherche = document.getElementById("champ-recherche");
 
-//affichage des options de tri en version mobile
-
 function creerCarte(objetLivre) {
   const { titre, auteur, typeDoc, prets } = objetLivre;
 
