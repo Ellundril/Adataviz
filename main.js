@@ -165,7 +165,7 @@ async function getLivres() {
     return formaterListe(resultat.results);
   } catch (erreur) {
     console.error(erreur.message);
-    cartes.textContent =
+    nbTotalLivres.textContent =
       " ! Une erreur s'est produite au chargement des fichiers ! ";
   } finally {
     console.log("chargement terminé");
