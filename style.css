@@ -98,6 +98,16 @@ select:focus-visible {
   background-color: rgb(253, 205, 141);
 }
 
+input {
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+input:focus-visible {
+  outline: 3px solid rgba(252, 176, 69, 1);
+  background-color: rgb(253, 205, 141);
+}
+
 .tri-nb-de-prets-croissant,
 .tri-nb-de-prets-decroissant {
   all: unset;
